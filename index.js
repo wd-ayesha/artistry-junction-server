@@ -26,10 +26,24 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const usersCollection = client.db("artistryDb").collection("users");
     const instructorCollection = client.db("artistryDb").collection("instructors");
     const classCollection = client.db("artistryDb").collection("classes");
 
-    
+    app.put('/users/:email', async(req, res) => {
+      const email = req.params.email
+      const user = req.body
+      const query = {email:email}
+      const options = {upsert: true}
+      const updateDoc = {
+        $set: user,
+      }
+      const result = await usersCollection.updateOne(query, updateDoc, options)
+      console.log(result)
+      res.send(result)
+    })
+
+
     app.get("/instructors", async (req, res) => {
       const result = await instructorCollection.find().toArray();
       res.send(result);
