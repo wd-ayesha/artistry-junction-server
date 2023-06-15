@@ -29,6 +29,7 @@ async function run() {
     const usersCollection = client.db("artistryDb").collection("users");
     const instructorCollection = client.db("artistryDb").collection("instructors");
     const classCollection = client.db("artistryDb").collection("classes");
+    const cartCollection = client.db("artistryDb").collection("carts");
 
     app.put('/users/:email', async(req, res) => {
       const email = req.params.email
@@ -53,6 +54,13 @@ async function run() {
       const result = await classCollection.find().toArray();
       res.send(result);
     });
+
+    app.post('/carts', async (req, res) => {
+      const item = req.body;
+      console.log(item);
+      const result = await cartCollection.insertOne(item);
+      res.send(result);
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
