@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 5000;
@@ -24,12 +24,17 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const usersCollection = client.db("artistryDb").collection("users");
     const instructorCollection = client.db("artistryDb").collection("instructors");
     const classCollection = client.db("artistryDb").collection("classes");
     const cartCollection = client.db("artistryDb").collection("carts");
+
+    app.get('/users', async(req, res) => {
+      const result = await usersCollection.find().toArray()
+      res.send(result)
+    })
 
     app.put('/users/:email', async(req, res) => {
       const email = req.params.email
